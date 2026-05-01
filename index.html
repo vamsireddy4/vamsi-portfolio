@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Technical Founder & AI Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+        
+        /* Custom Cursor */
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background-color: white;
+        }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-hover {
+            width: 60px; height: 60px;
+            background-color: rgba(255,255,255,0.1);
+            backdrop-filter: blur(2px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.8);
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .loader-text {
+            font-size: 5vw;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            background: linear-gradient(90deg, #fff, #555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-reveal {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        
+        .line-wrapper {
+            overflow: hidden;
+        }
+
+        #typewriter::after {
+            content: '|';
+            animation: blink 1s infinite;
+            margin-left: 4px;
+            color: #00ff55;
+        }
+
+        #about-typewriter::after {
+            content: '|';
+            animation: blink 1s infinite;
+            margin-left: 4px;
+            color: white;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Grid Background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+        /* Custom Button */
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        * {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-text" id="counter">0%</div>
+        <div class="w-64 h-1 bg-zinc-800 mt-4 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-white w-0"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-[95%] left-1/2 -translate-x-1/2 top-10 z-[100] flex justify-end items-center transition-all duration-300" id="navbar">
+        <button id="menu-toggle" class="hoverable flex flex-col gap-1.5 p-2 z-[200]">
+            <div class="w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar1"></div>
+            <div class="w-6 h-0.5 bg-white transition-all duration-300 origin-center" id="bar2"></div>
+        </button>
+    </nav>
+
+    <!-- Global Menu Drawer -->
+    <div id="menu-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[140] opacity-0 pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.85,0,0.15,1)]"></div>
+    <div id="mobile-menu" class="fixed top-0 right-0 h-screen w-full md:w-[450px] bg-[#111] z-[150] translate-x-full transition-transform duration-700 ease-[cubic-bezier(0.85,0,0.15,1)] p-8 md:p-16 flex flex-col border-l border-white/5 shadow-2xl">
+        <!-- Close Button -->
+        <button id="menu-close" class="absolute top-10 right-10 hoverable p-2 text-white">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <div class="h-full flex flex-col pt-24 pb-12 overflow-y-auto no-scrollbar">
+            <!-- Navigation Section -->
+            <div class="mb-16">
+                <p class="text-zinc-500 text-xs uppercase tracking-widest font-semibold mb-8">Menu</p>
+                <ul class="space-y-6">
+                    <li>
+                        <a href="#hero" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Home</a>
+                    </li>
+                    <li>
+                        <a href="#about" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">About</a>
+                    </li>
+                    <li>
+                        <a href="#expertise" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Experience</a>
+                    </li>
+                    <li>
+                        <a href="#projects" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Projects</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Social Section -->
+            <div class="mb-16">
+                <p class="text-zinc-500 text-xs uppercase tracking-widest font-semibold mb-6">Social</p>
+                <ul class="flex flex-col gap-4">
+                    <li><a href="https://github.com/vamsireddy4" target="_blank" class="text-lg text-white hover:text-[#00ff55] transition-colors font-normal">Github</a></li>
+                    <li><a href="https://www.linkedin.com/in/sai-vamsi-reddy-kovvuri-351094290/" target="_blank" class="text-lg text-white hover:text-[#00ff55] transition-colors font-normal">Linkedin</a></li>
+                    <li><a href="https://twitter.com/vamsireddy_4" target="_blank" class="text-lg text-white hover:text-[#00ff55] transition-colors font-normal">Twitter</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="mt-auto space-y-8">
+                <div>
+                    <p class="text-zinc-500 text-xs uppercase tracking-widest font-semibold mb-4">Get in touch</p>
+                    <a href="mailto:kovvurisivamsireddy@gmail.com" class="text-lg md:text-xl text-white hover:text-[#00ff55] transition-colors font-normal break-all">kovvurisivamsireddy@gmail.com</a>
+                </div>
+                <div>
+                    <a href="https://www.linkedin.com/in/sai-vamsi-reddy-kovvuri-351094290/" target="_blank" class="inline-block hoverable border border-[#00ff55]/30 px-6 py-3 rounded-full text-sm hover:bg-[#00ff55] hover:text-black transition-colors bg-[#00ff55]/5 text-white w-full text-center">LinkedIn Profile</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Fixed Vertical Email -->
+    <div class="hidden xl:block fixed left-6 bottom-40 -rotate-90 origin-left z-40 text-zinc-500 tracking-widest text-[13px] pointer-events-none whitespace-nowrap">
+        kovvurisaivamsireddy@gmail.com
+    </div>
+
+    <!-- Hero Section -->
+    <main id="hero" class="relative min-h-screen flex items-center pt-10">
+        <div class="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black"></div>
+        
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12 flex flex-col md:flex-row items-center justify-between mt-10 md:mt-0 relative z-10">
+            <div class="max-w-3xl">
+                <h1 class="hero-title font-bold text-[4rem] md:text-[6rem] lg:text-[7rem] tracking-wide leading-none text-white uppercase">
+                    AI-NATIVE<br>
+                    <span class="text-[#00ff55]">BUILDER</span>
+                </h1>
+                
+                <p class="text-zinc-400 text-lg md:text-xl max-w-xl mt-8 leading-relaxed hero-content">
+                    Hi, I'm <span class="text-white font-semibold">Vamsi Reddy</span>. I build high-performance AI SaaS, including <span class="text-white">MagicTeams.ai</span>, and specialize in prompt-engineered voice orchestration.
+                </p>
+
+                <div class="mt-10 flex gap-6 hero-content relative z-50">
+                    <!-- Button Removed -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Stats -->
+        <div id="stats-container" class="lg:absolute lg:right-12 lg:bottom-32 absolute bottom-10 left-0 w-full lg:w-auto flex flex-row lg:flex-col justify-around lg:justify-end items-center lg:items-end gap-4 lg:gap-8 z-40">
+            <div class="stat-card hoverable text-center lg:text-right">
+                <h3 class="font-bold text-2xl md:text-4xl text-white"><span class="stat-number" data-target="5">0</span><span class="text-[#00ff55]">+</span></h3>
+                <p class="text-zinc-500 text-[8px] md:text-[10px] uppercase tracking-widest mt-1">Years of Experience</p>
+            </div>
+            <div class="stat-card hoverable text-center lg:text-right">
+                <h3 class="font-bold text-2xl md:text-4xl text-white"><span class="stat-number" data-target="6">0</span><span class="text-[#00ff55]">+</span></h3>
+                <p class="text-zinc-500 text-[8px] md:text-[10px] uppercase tracking-widest mt-1">Completed Projects</p>
+            </div>
+            <div class="stat-card hoverable text-center lg:text-right">
+                <h3 class="font-bold text-2xl md:text-4xl text-white"><span class="stat-number" data-target="10">0</span><span class="text-[#00ff55]">K+</span></h3>
+                <p class="text-zinc-500 text-[8px] md:text-[10px] uppercase tracking-widest mt-1">Hours Worked</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- About Section -->
+    <section class="py-32 relative">
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12">
+            <h2 id="about-typewriter" class="text-3xl md:text-5xl lg:text-6xl font-light text-zinc-300 leading-tight max-w-5xl mb-32 section-title min-h-[8em]"></h2>
+            
+            <div id="about" class="mb-4 scroll-mt-40">
+                <p class="text-sm text-zinc-500 uppercase tracking-widest hover:text-[#00ff55] transition-colors duration-300 cursor-default inline-block">This is me.</p>
+            </div>
+            <div class="border-t border-white/10 pt-12 section-content">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                    <div class="md:col-span-5">
+                        <h3 class="text-4xl md:text-5xl font-medium text-white leading-tight hover:text-[#00ff55] transition-colors duration-300 cursor-default">Hi, I'm Vamsi.</h3>
+                    </div>
+                    <div class="md:col-span-7">
+                        <div class="space-y-6 text-zinc-400 leading-relaxed text-lg">
+                            <p>
+                                I'm a technical professional dedicated to turning ideas into creative solutions. I specialize in leveraging AI-driven workflows and prompt engineering, with a focus on building seamless experiences like <span class="text-white">MagicTeams.ai</span> during my time at Sapphire Labs Pvt. Ltd.
+                            </p>
+                            <p>
+                                My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, and responsiveness, I strive to deliver products that drive tangible results.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flagship Project -->
+    <section id="flagship" class="py-32 relative scroll-mt-32">
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12">
+            <p class="text-sm tracking-widest text-[#00ff55] uppercase mb-4 section-title cursor-default inline-block">Flagship Project</p>
+            <h2 class="font-bold text-5xl md:text-7xl tracking-wide uppercase mb-16 section-title">MagicTeams.AI</h2>
+            
+            <div class="glass-card rounded-3xl p-8 md:p-12 overflow-hidden relative group section-content">
+                <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i data-lucide="mic" class="w-32 h-32"></i>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 relative z-10">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full text-xs font-semibold mb-6">Active SaaS Platform</span>
+                        <h3 class="text-3xl font-bold mb-4">End-to-End Voice AI SaaS</h3>
+                        <p class="text-zinc-400 text-lg mb-8 leading-relaxed">
+                            A revolutionary voice orchestration platform capable of human-like conversation with <strong class="text-white">300ms latency</strong>. 
+                            Features real-time voice cloning and seamless bidirectional CRM syncing to automate team workflows and customer interactions.
+                        </p>
+                        <div class="flex gap-4">
+                            <a href="https://magicteams.ai/" target="_blank" class="hoverable bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full text-sm font-medium transition-colors backdrop-blur-md">View Platform</a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-black/40 border border-white/5 p-6 rounded-2xl flex flex-col justify-center">
+                            <i data-lucide="zap" class="text-yellow-400 mb-3"></i>
+                            <h4 class="text-xl font-bold">300ms</h4>
+                            <p class="text-sm text-zinc-500">Ultra-low latency</p>
+                        </div>
+                        <div class="bg-black/40 border border-white/5 p-6 rounded-2xl flex flex-col justify-center">
+                            <i data-lucide="mic-2" class="text-purple-400 mb-3"></i>
+                            <h4 class="text-xl font-bold">Cloning</h4>
+                            <p class="text-sm text-zinc-500">Voice synthesis</p>
+                        </div>
+                        <div class="bg-black/40 border border-white/5 p-6 rounded-2xl flex flex-col justify-center col-span-2">
+                            <i data-lucide="database" class="text-emerald-400 mb-3"></i>
+                            <h4 class="text-xl font-bold">CRM Sync</h4>
+                            <p class="text-sm text-zinc-500">Real-time bi-directional data flow</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stack Section -->
+    <section id="expertise" class="py-32 relative scroll-mt-32">
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12">
+            <div class="flex items-center gap-4 mb-24 section-title cursor-default text-[#00ff55]">
+                <i data-lucide="asterisk" class="w-8 h-8 animate-[spin_5s_linear_infinite]"></i>
+                <h2 class="text-xl tracking-widest uppercase">My Stack</h2>
+            </div>
+            
+            <div class="space-y-24 section-content">
+                <!-- Stack Row 1 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">AI Models</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/googlegemini/8E75C2" class="w-5 h-5" alt="Gemini"></span><span class="text-xl text-white">Gemini</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/anthropic/D97757" class="w-5 h-5" alt="Claude"></span><span class="text-xl text-white">Claude</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" class="w-5 h-5" alt="ChatGPT"></span><span class="text-xl text-white">ChatGPT</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/x/white" class="w-5 h-5" alt="Grok"></span><span class="text-xl text-white">Grok</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/meta/0668E1" class="w-5 h-5" alt="Llama"></span><span class="text-xl text-white">Llama</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/deepseek/007BFF" class="w-5 h-5" alt="DeepSeek"></span><span class="text-xl text-white">DeepSeek</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 2: Voice AI Agents -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">Voice AI</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://framerusercontent.com/images/dgVs9dqZ1mx4MzF91o2Q2CkGog.png" class="w-6 h-6 object-contain" alt="MagicTeams"></span><span class="text-xl text-white">MagicTeams</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 2 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">Orchestration</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/n8n/FF6D5A" class="w-5 h-5" alt="n8n"></span><span class="text-xl text-white">n8n</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/langchain/1C3C3C" class="w-5 h-5" alt="LangChain"></span><span class="text-xl text-white">LangChain</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-zinc-800 rounded flex items-center justify-center text-white"><i data-lucide="terminal"></i></span><span class="text-xl text-white">Vibe Coding</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 3 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">Frontend</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/nextdotjs/white" class="w-5 h-5" alt="Next.js"></span><span class="text-xl text-white">Next.js</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/react/61DAFB" class="w-5 h-5" alt="React Native"></span><span class="text-xl text-white">React Native</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" class="w-5 h-5" alt="Tailwind CSS"></span><span class="text-xl text-white">Tailwind CSS</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 4 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">Database</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" class="w-5 h-5" alt="Supabase"></span><span class="text-xl text-white">Supabase</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/firebase/FFCA28" class="w-5 h-5" alt="Firebase"></span><span class="text-xl text-white">Firebase</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/convex/24D4FF" class="w-5 h-5" alt="Convex"></span><span class="text-xl text-white">Convex</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 5 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start mb-16 stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">QA & Testing</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center text-white"><i data-lucide="bug"></i></span><span class="text-xl text-white">Manual Testing</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/jira/0052CC" class="w-5 h-5" alt="JIRA"></span><span class="text-xl text-white">JIRA</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/jenkins/D24939" class="w-5 h-5" alt="Jenkins"></span><span class="text-xl text-white">Jenkins</span></div>
+                    </div>
+                </div>
+
+                <!-- Stack Row 6 -->
+                <div class="grid md:grid-cols-12 gap-8 items-start stack-row">
+                    <div class="md:col-span-4">
+                        <h3 class="font-bold text-3xl md:text-4xl text-zinc-600 uppercase tracking-wide hover:text-white transition-colors cursor-default">Tools</h3>
+                    </div>
+                    <div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8 items-center">
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/git/F05032" class="w-5 h-5" alt="Git"></span><span class="text-xl text-white">Git</span></div>
+                        <div class="flex items-center gap-3"><span class="w-10 h-10 bg-white/5 rounded flex items-center justify-center"><img src="https://cdn.simpleicons.org/docker/2496ED" class="w-5 h-5" alt="Docker"></span><span class="text-xl text-white">Docker</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-32 relative">
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12">
+            <div class="flex items-center gap-4 mb-24 section-title cursor-default text-[#00ff55]">
+                <i data-lucide="asterisk" class="w-8 h-8 animate-[spin_5s_linear_infinite]"></i>
+                <h2 class="text-xl tracking-widest uppercase">My Experience</h2>
+            </div>
+            
+            <div class="space-y-16 section-content">
+                <!-- Exp 1 -->
+                <div>
+                    <p class="text-zinc-500 text-lg mb-2">MagicTeams.AI</p>
+                    <h3 class="font-bold text-5xl md:text-6xl text-zinc-500 tracking-wide uppercase transition-colors hover:text-white cursor-default">Technical Professional</h3>
+                    <p class="text-zinc-500 mt-2">Jan 2024 - Present</p>
+                </div>
+                
+                <!-- Exp 2 -->
+                <div>
+                    <p class="text-zinc-500 text-lg mb-2">Axas Software Development</p>
+                    <h3 class="font-bold text-5xl md:text-6xl text-zinc-500 tracking-wide uppercase transition-colors hover:text-white cursor-default">Software Test Engineer</h3>
+                    <p class="text-zinc-500 mt-2">Jun 2021 - Sep 2023</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Current Ventures & Projects -->
+    <section id="projects" class="py-32 scroll-mt-32">
+        <div class="container mx-auto px-6 lg:pl-32 lg:pr-12">
+            <p class="text-sm tracking-widest text-[#00ff55] uppercase mb-4 section-title cursor-default inline-block">Portfolio</p>
+            <h2 class="font-bold text-5xl md:text-7xl tracking-wide uppercase mb-16 section-title">Current Ventures</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 section-content">
+                <!-- Project: AIOS (Context OS) -->
+                <div>
+                    <a href="https://ai-os-orchestrator.lovable.app/" target="_blank" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative border-[#00ff55]/20 hover:border-[#00ff55]/50 block">
+                        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-[#00ff55]/10 blur-[80px] rounded-full group-hover:bg-[#00ff55]/20 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-[#00ff55] mb-2 block font-semibold">Context OS</span>
+                                <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors leading-tight">AIOS</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-[#00ff55] group-hover:text-black transition-all">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-500 text-[10px] mb-4 uppercase tracking-widest">Active Client Implementation</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-[#00ff55]/30 group-hover:bg-[#00ff55] transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+                <!-- Project 1 (Splyt - Upcoming) -->
+                <div>
+                    <div class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative opacity-70 hover:opacity-100 transition-opacity cursor-default">
+                        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/20 blur-[80px] rounded-full group-hover:bg-purple-500/40 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <h3 class="font-bold text-4xl tracking-wide uppercase transition-colors">Splyt</h3>
+                            <span class="text-[10px] border border-white/20 px-3 py-1 rounded-full text-zinc-400 bg-white/5 uppercase tracking-widest flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Upcoming</span>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">Fintech / Mobile App</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-white/20 group-hover:bg-purple-500 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 (LTES) -->
+                <div>
+                    <a href="#" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative border-blue-500/20 hover:border-blue-500/50 block">
+                        <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-600/10 blur-[80px] rounded-full group-hover:bg-blue-600/30 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-blue-400 mb-2 block font-semibold">Enterprise SaaS</span>
+                                <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors leading-tight">LT Energy Systems</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">Industrial operations & management</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-blue-500/50 group-hover:bg-blue-500 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Project 3 (EveryAI) -->
+                <div>
+                    <a href="https://every-ai.com/" target="_blank" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative block">
+                        <div class="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 blur-[80px] rounded-full group-hover:bg-emerald-500/30 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors">EveryAI</h3>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">AI Directory & Marketplace</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-emerald-500/50 group-hover:bg-emerald-400 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Project 4 (Saphaare Labs) -->
+                <div>
+                    <a href="https://mt-trackyourtasks.vercel.app/app/dashboard" target="_blank" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative block">
+                        <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-orange-500/10 blur-[80px] rounded-full group-hover:bg-orange-500/30 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors">Saphaare Labs</h3>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">Brand & Tech Consulting</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-orange-500/50 group-hover:bg-orange-400 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Project 5 (Belotrap) -->
+                <div>
+                    <div class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative opacity-80 hover:opacity-100 transition-opacity cursor-default">
+                        <div class="absolute -top-20 -left-20 w-64 h-64 bg-red-500/10 blur-[80px] rounded-full group-hover:bg-red-500/30 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-red-400 mb-2 block font-semibold">TG Sambo (Korea)</span>
+                                <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors leading-tight">Belotrap</h3>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">Offsite Quality Assurance / Testing</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-red-500/50 group-hover:bg-red-500 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5 (Intriq) -->
+                <div>
+                    <a href="#" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative block">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors leading-tight">Intriq<br>Calculator</h3>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">Live iOS Application</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-cyan-500/50 group-hover:bg-cyan-400 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Project 6 (Upcoming Stack) -->
+                <div>
+                    <div class="grid grid-rows-2 gap-6 h-[28rem]">
+                        <div class="glass-card group rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative opacity-70 hover:opacity-100 transition-opacity cursor-default">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 blur-[50px] rounded-full group-hover:bg-pink-500/30 transition-colors"></div>
+                            <div class="flex justify-between items-start relative z-10">
+                                <div>
+                                    <h3 class="font-bold text-2xl tracking-wide uppercase transition-colors">CodeCanvas</h3>
+                                    <p class="text-zinc-500 text-[10px] mt-1 uppercase tracking-widest">UI Marketplace</p>
+                                </div>
+                                <span class="text-[9px] border border-white/20 px-2 py-1 rounded-full text-zinc-400 bg-white/5 uppercase tracking-widest flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Upcoming</span>
+                            </div>
+                        </div>
+                        <div class="glass-card group rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative opacity-70 hover:opacity-100 transition-opacity cursor-default">
+                            <div class="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/10 blur-[50px] rounded-full group-hover:bg-yellow-500/30 transition-colors"></div>
+                            <div class="flex justify-between items-start relative z-10">
+                                <div>
+                                    <h3 class="font-bold text-2xl tracking-wide uppercase transition-colors leading-tight">Tools<br>Directory AI</h3>
+                                    <p class="text-zinc-500 text-[10px] mt-2 uppercase tracking-widest">AI Marketplace</p>
+                                </div>
+                                <span class="text-[9px] border border-white/20 px-2 py-1 rounded-full text-zinc-400 bg-white/5 uppercase tracking-widest flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Upcoming</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 7 (FXBC) -->
+                <div>
+                    <a href="https://www.fxbc.com.au/" target="_blank" class="glass-card group rounded-2xl p-8 flex flex-col h-[28rem] hoverable overflow-hidden relative border-red-500/20 hover:border-red-500/50 block">
+                        <div class="absolute -top-20 -left-20 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/30 transition-colors duration-700"></div>
+                        <div class="flex justify-between items-start mb-auto relative z-10">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-red-400 mb-2 block font-semibold">Client Project</span>
+                                <h3 class="font-bold text-4xl tracking-wide uppercase group-hover:text-white transition-colors">FXBC</h3>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i data-lucide="external-link" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div class="relative z-10 mt-auto">
+                            <p class="text-zinc-400 text-xs mb-4 uppercase tracking-widest">n8n Workflows & Voice AI</p>
+                            <div class="h-1 w-12 group-hover:w-full bg-red-500/50 group-hover:bg-red-500 transition-all duration-700 ease-out"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="border-t border-white/5 bg-black pt-20 pb-10">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 mb-20 section-content">
+                <div>
+                    <h2 class="font-bold text-6xl md:text-8xl tracking-wide uppercase mb-6 leading-tight">Let's build<br>the <span id="typewriter" class="text-[#00ff55]"></span></h2>
+                    <a href="mailto:kovvurisaivamsireddy@gmail.com" class="hoverable text-xl text-zinc-400 hover:text-[#00ff55] transition-colors border-b border-zinc-700 hover:border-[#00ff55] pb-1 inline-block">kovvurisaivamsireddy@gmail.com</a>
+                </div>
+                <div class="flex flex-col justify-end">
+                    <h4 class="font-bold text-lg mb-4 text-[#00ff55] transition-colors duration-300 cursor-default inline-block">Core Focus</h4>
+                    <p class="text-zinc-400 leading-relaxed mb-8 max-w-sm">
+                        Dedicated to creating seamless, low-latency applications that leverage the power of artificial intelligence to solve complex business problems.
+                    </p>
+                    <div class="flex gap-6">
+                        <a href="https://www.linkedin.com/in/sai-vamsi-reddy-kovvuri-351094290/" target="_blank" class="hoverable text-zinc-500 hover:text-[#00ff55] transition-colors">LinkedIn</a>
+                        <a href="https://x.com/VamsiBuilds" target="_blank" class="hoverable text-zinc-500 hover:text-[#00ff55] transition-colors">Twitter</a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-8 text-sm text-zinc-600">
+                <p>&copy; <span id="year"></span> Vamsi Reddy. All rights reserved.</p>
+                <p class="mt-2 md:mt-0">Designed & Engineered with precision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Custom Cursor Logic
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const hoverables = document.querySelectorAll('.hoverable, a, button');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            
+            // Fast follow for dot
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            
+            // Smooth follow for outline
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.classList.add('cursor-hover');
+                cursorDot.style.opacity = '0';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.classList.remove('cursor-hover');
+                cursorDot.style.opacity = '1';
+            });
+        });
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const menuBackdrop = document.getElementById('menu-backdrop');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                menuBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+                bar1.style.transform = 'translateY(4px) rotate(45deg)';
+                bar2.style.transform = 'translateY(-4px) rotate(-45deg)';
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                menuBackdrop.classList.add('opacity-0', 'pointer-events-none');
+                bar1.style.transform = 'none';
+                bar2.style.transform = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        if (menuToggle) menuToggle.addEventListener('click', toggleMenu);
+        if (menuBackdrop) menuBackdrop.addEventListener('click', toggleMenu);
+
+        const menuClose = document.getElementById('menu-close');
+        if (menuClose) menuClose.addEventListener('click', toggleMenu);
+
+        // Close menu when clicking links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu();
+            });
+        });
+
+        // Scroll handler for navbar
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) {
+                navbar.style.top = '1.5rem';
+            } else {
+                navbar.style.top = '2.5rem';
+            }
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Preloader Animation
+        const counter = document.getElementById("counter");
+        const progressBar = document.getElementById("progress-bar");
+        let count = 0;
+        
+        const loaderInterval = setInterval(() => {
+            count += Math.floor(Math.random() * 10) + 1;
+            if (count >= 100) {
+                count = 100;
+                clearInterval(loaderInterval);
+                
+                // Exit Preloader
+                gsap.to("#preloader", {
+                    yPercent: -100,
+                    duration: 1,
+                    ease: "power4.inOut",
+                    delay: 0.2,
+                    onComplete: initAnimations
+                });
+            }
+            counter.innerText = count + "%";
+            progressBar.style.width = count + "%";
+        }, 30);
+
+        function initAnimations() {
+            // Hero Animations
+            const tl = gsap.timeline();
+            
+            tl.from(".hero-text", {
+                y: 50,
+                autoAlpha: 0,
+                duration: 0.8,
+                ease: "power3.out"
+            })
+            .from(".hero-title", {
+                y: 100,
+                autoAlpha: 0,
+                duration: 1,
+                ease: "power4.out",
+            }, "-=0.4")
+            .from(".hero-desc", {
+                y: 50,
+                autoAlpha: 0,
+                duration: 0.8,
+                ease: "power3.out"
+            }, "-=0.6")
+            .from(".hero-btn", {
+                y: 20,
+                autoAlpha: 0,
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            }, "-=0.4")
+            // Perfectly Sequential Stats Animation
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                const number = card.querySelector('.stat-number');
+                const target = parseInt(number.getAttribute('data-target'));
+                
+                tl.from(card, {
+                    x: 30,
+                    autoAlpha: 0,
+                    duration: 0.6,
+                    ease: "power3.out"
+                })
+                .to(number, {
+                    innerText: target,
+                    duration: 1.5,
+                    snap: { innerText: 1 },
+                    ease: "power2.out"
+                });
+            });
+
+            // Scroll Animations
+            gsap.utils.toArray('.section-title').forEach(title => {
+                gsap.from(title, {
+                    scrollTrigger: {
+                        trigger: title,
+                        start: "top 85%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 50,
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+            });
+
+            gsap.utils.toArray('.section-content').forEach(content => {
+                if (content.closest('#expertise')) return; // Skip stack section as we handle it per row
+                gsap.from(content.children, {
+                    scrollTrigger: {
+                        trigger: content,
+                        start: "top 80%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    y: 50,
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: "power3.out"
+                });
+            });
+
+            // Granular Stack Animation
+            gsap.utils.toArray('.stack-row').forEach(row => {
+                const title = row.querySelector('h3');
+                const items = row.querySelectorAll('.flex.items-center');
+                
+                gsap.from([title, ...items], {
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 85%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    x: -30,
+                    autoAlpha: 0,
+                    duration: 0.8,
+                    stagger: 0.05,
+                    ease: "power3.out"
+                });
+            });
+
+
+
+            // Typing Animation for About Section
+            gsap.to("#about-typewriter", {
+                duration: 4,
+                text: "I believe in a user centered design approach, ensuring that every project I work on is tailored to meet the specific needs of its users.",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#about-typewriter",
+                    start: "top 80%",
+                    toggleActions: "play reverse play reverse"
+                }
+            });
+
+            // Typing Animation for Footer
+            gsap.to("#typewriter", {
+                duration: 1.5,
+                text: "future.",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#typewriter",
+                    start: "top 90%",
+                    toggleActions: "play reverse play reverse"
+                }
+            });
+        }
+    </script>
+</body>
+</html>
