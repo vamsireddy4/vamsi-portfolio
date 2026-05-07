@@ -7,7 +7,32 @@
   pretty_urls = true
 
 [[redirects]]
+  from = "/portfolio"
+  to = "/"
+  status = 301
+
+[[redirects]]
   from = "/portfolio/*"
+  to = "/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/experience"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/projects"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/flagship"
   to = "/index.html"
   status = 200
 

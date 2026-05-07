@@ -1,6 +1,13 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/portfolio", "destination": "/", "permanent": true },
+    { "source": "/portfolio/:section", "destination": "/:section", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/portfolio/:section*", "destination": "/index.html" }
+    { "source": "/about",      "destination": "/index.html" },
+    { "source": "/experience", "destination": "/index.html" },
+    { "source": "/projects",   "destination": "/index.html" },
+    { "source": "/flagship",   "destination": "/index.html" }
   ]
 }

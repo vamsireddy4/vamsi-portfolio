@@ -180,13 +180,13 @@
                         <a href="/portfolio" data-section="hero" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Home</a>
                     </li>
                     <li>
-                        <a href="/portfolio/about" data-section="about" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">About</a>
+                        <a href="/about" data-section="about" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">About</a>
                     </li>
                     <li>
-                        <a href="/portfolio/experience" data-section="expertise" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Experience</a>
+                        <a href="/experience" data-section="expertise" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Experience</a>
                     </li>
                     <li>
-                        <a href="/portfolio/projects" data-section="projects" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Portfolio</a>
+                        <a href="/projects" data-section="projects" class="mobile-nav-link text-sm md:text-lg font-medium text-white hover:text-[#00ff55] transition-colors uppercase tracking-tight">Portfolio</a>
                     </li>
                 </ul>
             </div>
@@ -975,7 +975,6 @@
         (function () {
             const ROUTES = {
                 '': 'hero',
-                'portfolio': 'hero',
                 'about': 'about',
                 'experience': 'expertise',
                 'projects': 'projects',
@@ -985,8 +984,7 @@
             function segmentFromPath(path) {
                 const clean = path.replace(/\/$/, '');
                 const parts = clean.split('/');
-                const last = parts[parts.length - 1];
-                return (last === 'portfolio') ? '' : last;
+                return parts[parts.length - 1] || '';
             }
 
             function scrollToSection(id, updateUrl = true) {
@@ -1000,7 +998,7 @@
                     if (updateUrl) {
                         const seg = Object.keys(ROUTES).find(key => ROUTES[key] === id);
                         if (seg !== undefined) {
-                            const newPath = seg === '' || seg === 'portfolio' ? '/portfolio' : '/portfolio/' + seg;
+                            const newPath = seg === '' ? '/' : '/' + seg;
                             if (location.pathname !== newPath) {
                                 history.pushState({ sectionId: id }, "", newPath);
                             }
@@ -1045,7 +1043,7 @@
                     const hashId = window.location.hash.substring(1);
                     const seg = Object.keys(ROUTES).find(key => ROUTES[key] === hashId);
                     if (seg !== undefined) {
-                        const newPath = seg === '' || seg === 'portfolio' ? '/portfolio' : '/portfolio/' + seg;
+                        const newPath = seg === '' ? '/' : '/' + seg;
                         history.replaceState({ sectionId: hashId }, "", newPath);
                         setTimeout(() => scrollToSection(hashId, false), 500);
                         return;
@@ -1085,7 +1083,7 @@
                     if (current) {
                         const seg = Object.keys(ROUTES).find(key => ROUTES[key] === current);
                         if (seg !== undefined) {
-                            const newPath = (seg === '' || seg === 'portfolio') ? '/portfolio' : '/portfolio/' + seg;
+                            const newPath = seg === '' ? '/' : '/' + seg;
                             if (location.pathname !== newPath) {
                                 history.replaceState({ sectionId: current }, "", newPath);
                             }
