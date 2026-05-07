@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belotrap | QA & Automation Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                               linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal-content { opacity: 0; transform: translateY(30px); }
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#00ff55] selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <a href="portfolio.html#projects" class="flex items-center gap-4 group hoverable">
+            <div class="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:bg-[#00ff55] hover:text-black transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">Back to Portfolio</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative min-h-[70vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+        
+        <!-- Glow Effect -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff55]/5 blur-[120px] rounded-full"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal-content text-[#00ff55] uppercase tracking-[0.3em] text-sm font-bold mb-6">TG Sambo (Korea)</p>
+                <h1 class="reveal-content text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-8 uppercase whitespace-nowrap">
+                    BELO<span class="text-white outline-text">TRAP</span>
+                </h1>
+                <p class="reveal-content text-zinc-400 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
+                    A solid <span class="text-white">Quality Assurance & Automation</span> project demonstrating scalable testing frameworks within a professional SDLC.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="container mx-auto px-6 py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Overview -->
+            <section class="mb-32 reveal-content">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4">
+                        <h2 class="text-sm uppercase tracking-widest text-zinc-500 font-bold mb-4 flex items-center gap-2">
+                            <span class="w-8 h-px bg-[#00ff55]/50"></span> The Objective
+                        </h2>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                            Responsible for transitioning <span class="text-[#00ff55] font-bold">manual testing processes</span> into a robust automation suite for <span class="text-white">TG Sambo</span>, ensuring software stability over a two-year lifecycle.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Stack -->
+            <section class="mb-32">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Pillar 1: Java-Selenium Ecosystem -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="code-2" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">Automation Framework</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                            A Maven-based architecture using the industry-standard "Java-Selenium-TestNG" stack.
+                        </p>
+                        <ul class="space-y-4 text-zinc-500 text-xs uppercase tracking-widest">
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Selenium WebDriver Engine</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>TestNG Execution & Reporting</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Apache POI Data-Driven Testing</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 2: CI/CD & DevOps -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="git-merge" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">DevOps Integration</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed mb-6">
+                            Ensuring every code change is verified through continuous integration.
+                        </p>
+                        <ul class="space-y-4 text-zinc-500 text-xs uppercase tracking-widest">
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Jenkins Automated Pipelines</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>GitHub Version Control</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Maven Dependency Management</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Agile & Execution -->
+            <section class="mb-32">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="reveal-content">
+                        <h2 class="text-3xl font-bold mb-8 uppercase tracking-tight">Agile <br><span class="text-[#00ff55]">Methodology</span></h2>
+                        <div class="space-y-8">
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 glass-card rounded-xl flex-shrink-0 flex items-center justify-center">
+                                    <i data-lucide="check-square" class="w-6 h-6 text-[#00ff55]"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2 uppercase text-sm tracking-widest">TDD Environment</h4>
+                                    <p class="text-zinc-400 text-sm leading-relaxed">Operated within Test Driven Development cycles, translating master test cases into automated scenarios.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 glass-card rounded-xl flex-shrink-0 flex items-center justify-center">
+                                    <i data-lucide="users" class="w-6 h-6 text-[#00ff55]"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-2 uppercase text-sm tracking-widest">Scrum Execution</h4>
+                                    <p class="text-zinc-400 text-sm leading-relaxed">Active participation in Agile/Scrum ceremonies, managing defects and tasks through JIRA.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card p-12 rounded-[3rem] reveal-content bg-gradient-to-br from-[#00ff55]/5 to-transparent">
+                        <h3 class="text-2xl font-bold mb-8 uppercase tracking-tight flex items-center gap-3">
+                            <i data-lucide="zap" class="text-[#00ff55]"></i>
+                            Project Impact
+                        </h3>
+                        <ul class="space-y-6 text-zinc-400">
+                            <li class="flex items-start gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Reduced Manual Effort:</strong> Reusable infrastructure for long-term regression.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Accelerated Releases:</strong> CI/CD integration for rapid feedback loops.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Software Stability:</strong> Comprehensive coverage for prominent South Korean client TG Sambo.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Statement -->
+            <section class="text-center py-24 reveal-content">
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-[#00ff55] font-bold uppercase tracking-[0.4em] text-xs mb-8">The Result</p>
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 uppercase tracking-tighter leading-[0.9]">
+                        AUTOMATION AT SCALE. <br>
+                        <span class="text-white outline-text">MODERN QA INFRASTRUCTURE.</span>
+                    </h3>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <p>&copy; 2024 Belotrap &bull; Quality Assurance & Automation</p>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        // Hover Effect
+        const hoverables = document.querySelectorAll('.hoverable, .glass-card, a, button');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('w-[60px]', 'h-[60px]', 'bg-white/10'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('w-[60px]', 'h-[60px]', 'bg-white/10'));
+        });
+
+        // Animations
+        gsap.to('.reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            scrollTrigger: {
+                trigger: '.reveal-content',
+                start: "top 85%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        // Specific Hero Stagger
+        const heroTl = gsap.timeline();
+        heroTl.to('header .reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Section Wise Mouse Entry Animation
+        const sections = document.querySelectorAll('section, header');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                gsap.to(section, {
+                    scale: 1.005,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: -5,
+                        borderColor: 'rgba(0, 255, 85, 0.3)',
+                        stagger: 0.05,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '#00ff55',
+                        x: 10,
+                        duration: 0.4
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                gsap.to(section, {
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: 0,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        duration: 0.6,
+                        ease: "power2.inOut"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '',
+                        x: 0,
+                        duration: 0.4
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

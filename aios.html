@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIOS Web App | Magic Teams Operating System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                               linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal-content { opacity: 0; transform: translateY(30px); }
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#00ff55] selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <a href="portfolio.html#projects" class="flex items-center gap-4 group hoverable">
+            <div class="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:bg-[#00ff55] hover:text-black transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">Back to Portfolio</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative min-h-[70vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+        
+        <!-- Glow Effect -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff55]/5 blur-[120px] rounded-full"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal-content text-[#00ff55] uppercase tracking-[0.3em] text-sm font-bold mb-6">Context OS Launch</p>
+                <h1 class="reveal-content text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-8 uppercase whitespace-nowrap">
+                    MAGIC <span class="text-white outline-text">TEAMS AIOS</span>
+                </h1>
+                <p class="reveal-content text-zinc-400 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
+                    The physical home for your company’s intelligence. A centralized command center where the "operating system" becomes visible and actionable.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="container mx-auto px-6 py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Overview -->
+            <section class="mb-32 reveal-content">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4">
+                        <h2 class="text-sm uppercase tracking-widest text-zinc-500 font-bold mb-4 flex items-center gap-2">
+                            <span class="w-8 h-px bg-[#00ff55]/50"></span> Platform Evolution
+                        </h2>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                            It’s no longer just a set of "invisible" automations running in the background; it’s a <span class="text-white">centralized command center</span> where you actually run the business.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Pillars -->
+            <section class="mb-32">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Pillar 1 -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="layout-dashboard" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">The "Single Pane of Glass"</h3>
+                        <ul class="space-y-4 text-zinc-400">
+                            <li class="flex gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>The Daily Brief:</strong> Every morning, the app generates a high-level summary of your numbers and team performance.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Real-Time Data Layer:</strong> A live view of your pipeline and ops metrics, wired directly into your existing stack.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="brain-circuit" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">Interactive Intelligence</h3>
+                        <ul class="space-y-4 text-zinc-400">
+                            <li class="flex gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Company Brain:</strong> Query your own business. Get answers based on AI monitoring of meetings and messages.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Automation Health:</strong> A transparent view of reclaimed hours and handled tasks in real-time.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Delivery & Vibecoding -->
+            <section class="mb-32">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Built with Vibe Coding -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="zap" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">Built with Vibe Coding</h3>
+                        <p class="text-zinc-400 leading-relaxed mb-6">
+                            By leveraging a <span class="text-[#00ff55] font-bold">Vibe Coding</span> workflow, I moved from concept to a fully functional platform using natural language and real-time iteration.
+                        </p>
+                        <div class="space-y-4 text-xs text-zinc-500 uppercase tracking-widest">
+                            <div class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Rapid Prototyping</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-[#00ff55] rounded-full"></div>
+                                <span>Experience-First Architecture</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Streamlined Delivery -->
+                    <div class="glass-card p-10 rounded-[2.5rem] reveal-content hover:border-[#00ff55]/30 transition-colors group">
+                        <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="rocket" class="w-7 h-7 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-6 uppercase tracking-tight">Streamlined Delivery</h3>
+                        <ul class="space-y-4 text-zinc-400">
+                            <li class="flex gap-3 text-sm">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Self-Serve Discovery:</strong> New clients can connect their tools via secure OAuth in minutes.</span>
+                            </li>
+                            <li class="flex gap-3 text-sm">
+                                <span class="text-[#00ff55] font-bold">/</span>
+                                <span><strong>Living Playbooks:</strong> The written playbook is now a dynamic, digital manual inside the app.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ownership Section -->
+            <section class="mb-32">
+                <div class="glass-card p-12 rounded-[3rem] border-[#00ff55]/20 relative overflow-hidden reveal-content">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#00ff55]/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    
+                    <div class="flex flex-col items-center text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl font-bold mb-8 flex items-center gap-4 uppercase tracking-tight">
+                            <i data-lucide="shield-check" class="text-[#00ff55]"></i>
+                            Ownership & Control
+                        </h2>
+                        <p class="text-zinc-400 text-xl leading-relaxed italic mb-12">
+                            "The web app gives your team a tangible tool to interact with. It’s the operating system made visible—ensuring that the system doesn't just 'stick,' but becomes the primary way your team ships work."
+                        </p>
+                        
+                        <!-- Built with Vibecoding Badge -->
+                        <div class="flex items-center gap-3 px-6 py-3 rounded-full bg-[#00ff55]/10 border border-[#00ff55]/20">
+                            <span class="text-[#00ff55] font-bold text-xs uppercase tracking-[0.2em]">Built with Vibecoding</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Statement -->
+            <section class="text-center py-24 reveal-content">
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-[#00ff55] font-bold uppercase tracking-[0.4em] text-xs mb-8">The Vision</p>
+                    <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-12 uppercase tracking-tighter leading-[0.9]">
+                        NOT JUST ANOTHER TOOL. <br>
+                        <span class="text-white outline-text">THE INTERFACE FOR YOUR COMPANY.</span>
+                    </h3>
+                    
+                    <div class="flex justify-center mt-12">
+                        <a href="https://aiosforbusiness.netlify.app/" target="_blank" class="px-10 py-5 bg-[#00ff55] text-black rounded-2xl flex items-center gap-3 hoverable group hover:scale-105 transition-all shadow-[0_0_30px_rgba(0,255,85,0.3)]">
+                            <i data-lucide="external-link" class="w-6 h-6 group-hover:rotate-12 transition-transform"></i>
+                            <span class="text-sm uppercase tracking-[0.2em] font-bold">Visit Platform</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <p>&copy; 2024 AIOS Web App &bull; Magic Teams Implementation</p>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        // Hover Effect
+        const hoverables = document.querySelectorAll('.hoverable, .glass-card, a, button');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('w-[60px]', 'h-[60px]', 'bg-white/10'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('w-[60px]', 'h-[60px]', 'bg-white/10'));
+        });
+
+        // Animations
+        gsap.to('.reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            scrollTrigger: {
+                trigger: '.reveal-content',
+                start: "top 85%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        // Specific Hero Stagger
+        const heroTl = gsap.timeline();
+        heroTl.to('header .reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Section Wise Mouse Entry Animation
+        const sections = document.querySelectorAll('section, header');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                gsap.to(section, {
+                    scale: 1.005,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: -5,
+                        borderColor: 'rgba(0, 255, 85, 0.3)',
+                        stagger: 0.05,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '#00ff55',
+                        x: 10,
+                        duration: 0.4
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                gsap.to(section, {
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: 0,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        duration: 0.6,
+                        ease: "power2.inOut"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '',
+                        x: 0,
+                        duration: 0.4
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

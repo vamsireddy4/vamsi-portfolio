@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryAI | All-in-One AI Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal-content { opacity: 0; transform: translateY(30px); }
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#00ff55] selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <a href="portfolio.html#projects" class="flex items-center gap-4 group hoverable">
+            <div class="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:bg-[#00ff55] hover:text-black transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">Back to Portfolio</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative min-h-[70vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+        
+        <!-- Glow Effect -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff55]/5 blur-[120px] rounded-full"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal-content text-[#00ff55] uppercase tracking-[0.3em] text-sm font-bold mb-6">AI Ecosystem</p>
+                <h1 class="reveal-content text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-8 uppercase whitespace-nowrap">
+                    EVERY <span class="text-white outline-text">AI</span>
+                </h1>
+                <p class="reveal-content text-zinc-400 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
+                    I developed <span class="text-white font-bold">EveryAI</span> to eliminate the friction of managing multiple AI subscriptions. The goal was to create a unified "operating system" for artificial intelligence where users can access over 100+ premium models from a single, streamlined dashboard. 
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="container mx-auto px-6 py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Overview -->
+            <section class="mb-32 reveal-content">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4">
+                        <h2 class="text-sm uppercase tracking-widest text-zinc-500 font-bold mb-4 flex items-center gap-2">
+                            <span class="w-8 h-px bg-[#00ff55]/50"></span> The Platform
+                        </h2>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                            By leveraging a <span class="text-white">Vibe Coding</span> workflow, I focused on the "vibe" and flow of the user experience rather than getting bogged down in boilerplate code—allowing for rapid prototyping of complex AI orchestration.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Features -->
+            <section class="mb-32">
+                <div class="flex items-center gap-4 mb-16 reveal-content">
+                    <h2 class="text-3xl font-bold tracking-tight uppercase">Key Features</h2>
+                    <div class="h-px flex-grow bg-white/10"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Unified Dashboard -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="layout-dashboard" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Automated Tool Selection</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Users don't need to pick a model; they simply state their goal, and the platform <span class="text-white">automatically selects</span> the best AI for the job based on real-time requirements.
+                        </p>
+                    </div>
+
+                    <!-- Automated Selection -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="zap" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">26-in-1 Marketing Suite</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Bundled a comprehensive set of tools for <span class="text-white">lead generation</span>, traffic automation, and sales funnel construction in a single cloud-based environment.
+                        </p>
+                    </div>
+
+                    <!-- Media Generation -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="image" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Commercial-Ready Output</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Built specifically for agencies, providing <span class="text-white">commercial rights</span> for all AI-generated content, branding kits, and sales videos.
+                        </p>
+                    </div>
+
+                    <!-- Prompt Library -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="book-open" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Zero-Subscription Model</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Engineered to support a <span class="text-white">lifetime-access approach</span>, removing the need for users to pay monthly fees for individual premium AI services.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Specialized Components -->
+            <section class="mb-32">
+                <div class="glass-card p-12 rounded-[3rem] border-[#00ff55]/20 relative overflow-hidden reveal-content">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#00ff55]/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    
+                    <h2 class="text-3xl font-bold mb-12 flex items-center gap-4 uppercase tracking-tight">
+                        <i data-lucide="component" class="text-[#00ff55]"></i>
+                        Specialized Business Units
+                    </h2>
+
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="space-y-4">
+                            <div class="text-[#00ff55] font-bold text-xs uppercase tracking-widest">Chatbot Pro</div>
+                            <h4 class="text-xl font-bold text-white">Turbo Bot Builder</h4>
+                            <p class="text-zinc-400 text-sm">No-code tool for building unlimited, customized chatbots across multiple platforms.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="text-[#00ff55] font-bold text-xs uppercase tracking-widest">Lead Gen</div>
+                            <h4 class="text-xl font-bold text-white">Facebook AI</h4>
+                            <p class="text-zinc-400 text-sm">Specialized training and tools for creating lead-generating bots for Messenger.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="text-[#00ff55] font-bold text-xs uppercase tracking-widest">Marketing</div>
+                            <h4 class="text-xl font-bold text-white">26-in-1 Suite</h4>
+                            <p class="text-zinc-400 text-sm">Comprehensive digital marketing bundle to automate traffic and sales funnels.</p>
+                        </div>
+                    </div>
+
+                    <!-- Vibecoding Badge -->
+                    <div class="mt-16 pt-12 border-t border-white/5 flex justify-center">
+                        <div class="flex items-center gap-3 px-6 py-3 rounded-full bg-[#00ff55]/10 border border-[#00ff55]/20">
+                            <span class="text-[#00ff55] font-bold text-xs uppercase tracking-[0.2em]">Built with Vibecoding</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Business Model -->
+            <section class="text-center py-24 reveal-content">
+                <h2 class="text-sm uppercase tracking-widest text-[#00ff55] font-bold mb-6">Technical Summary</h2>
+                <h3 class="text-4xl md:text-5xl font-bold mb-12 uppercase tracking-tighter">Cloud-Based Bridge</h3>
+                <p class="text-zinc-400 max-w-3xl mx-auto mb-16 text-lg">
+                    EveryAI is a 100% cloud-based solution that serves as a bridge between complex AI models and the end-user. By using <span class="text-white font-bold">Vibe Coding</span>, I built a cross-device interface that makes professional-grade AI accessible to anyone.
+                </p>
+                
+                <a href="https://every-ai.com/" target="_blank" class="inline-flex items-center gap-3 bg-[#00ff55] text-black px-10 py-5 rounded-2xl font-bold uppercase tracking-widest hover:scale-105 transition-transform group">
+                    Explore Every-AI.com
+                    <i data-lucide="external-link" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </a>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <p>&copy; 2024 EveryAI &bull; Part of the Vamsi Reddy Portfolio</p>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        // Hover Effect
+        const hoverables = document.querySelectorAll('.hoverable, .glass-card, a, button');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('w-[60px]', 'h-[60px]', 'bg-white/10'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('w-[60px]', 'h-[60px]', 'bg-white/10'));
+        });
+
+        // Animations
+        gsap.to('.reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            scrollTrigger: {
+                trigger: '.reveal-content',
+                start: "top 85%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        // Specific Hero Stagger
+        const heroTl = gsap.timeline();
+        heroTl.to('header .reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Section Wise Mouse Entry Animation
+        const sections = document.querySelectorAll('section, header');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                gsap.to(section, {
+                    scale: 1.01,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: -10,
+                        borderColor: 'rgba(0, 255, 85, 0.3)',
+                        stagger: 0.05,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '#00ff55',
+                        x: 10,
+                        duration: 0.4
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                gsap.to(section, {
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: 0,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        duration: 0.6,
+                        ease: "power2.inOut"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '',
+                        x: 0,
+                        duration: 0.4
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

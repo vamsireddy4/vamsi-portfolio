@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intriq Calculator | Premium Financial Utility</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal-content { opacity: 0; transform: translateY(30px); }
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#00ff55] selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <a href="portfolio.html#projects" class="flex items-center gap-4 group hoverable">
+            <div class="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:bg-[#00ff55] hover:text-black transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">Back to Portfolio</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative min-h-[70vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+        
+        <!-- Glow Effect -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff55]/5 blur-[120px] rounded-full"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal-content text-[#00ff55] uppercase tracking-[0.3em] text-sm font-bold mb-6">FinTech Application</p>
+                <h1 class="reveal-content text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-8 uppercase whitespace-nowrap">
+                    INTRIQ <span class="text-white outline-text">CALCULATOR</span>
+                </h1>
+                <p class="reveal-content text-zinc-400 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
+                    The Intriq Calculator is a premium financial utility designed to simplify complex interest computations, focusing on delivering a high-end user experience with professional-grade accuracy.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="container mx-auto px-6 py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Overview -->
+            <section class="mb-32 reveal-content">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4">
+                        <h2 class="text-sm uppercase tracking-widest text-zinc-500 font-bold mb-4 flex items-center gap-2">
+                            <span class="w-8 h-px bg-[#00ff55]/50"></span> Developer Vision
+                        </h2>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                            Developed using a <span class="text-white">Vibe Coding</span> approach with Xcode and Claude, the app translates complex financial logic into a polished iOS application by focusing on flow and user interaction.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Functionality -->
+            <section class="mb-32">
+                <div class="flex items-center gap-4 mb-16 reveal-content">
+                    <h2 class="text-3xl font-bold tracking-tight uppercase">Core Functionality</h2>
+                    <div class="h-px flex-grow bg-white/10"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Interest Modes -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="percent" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 uppercase tracking-wide">Simple & Compound</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">
+                            Switch instantly between calculation modes to estimate loan costs or long-term investment growth.
+                        </p>
+                    </div>
+
+                    <!-- Frequencies -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="calendar" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 uppercase tracking-wide">Flexible Frequencies</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">
+                            Calculate compounding on an annual, semi-annual, quarterly, or monthly basis with precision.
+                        </p>
+                    </div>
+
+                    <!-- Smart History -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="history" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 uppercase tracking-wide">Smart History</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">
+                            Auto-saves calculations for easy tracking, with an auto-expiration feature that keeps the interface clean.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Design & Privacy -->
+            <section class="mb-32">
+                <div class="glass-card p-12 rounded-[3rem] border-[#00ff55]/20 relative overflow-hidden reveal-content">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#00ff55]/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    
+                    <h2 class="text-3xl font-bold mb-12 flex items-center gap-4 uppercase tracking-tight">
+                        <i data-lucide="shield-check" class="text-[#00ff55]"></i>
+                        Premium UX & Privacy
+                    </h2>
+
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-bold text-white">Refined Interface</h4>
+                                <p class="text-zinc-400">Professional color palette with smooth animations and full support for both <span class="text-[#00ff55]">Light and Dark modes</span>.</p>
+                            </div>
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-bold text-white">Local Storage</h4>
+                                <p class="text-zinc-400">All financial data and calculations are <span class="text-white">stored locally</span> on your device. Your information never leaves your phone.</p>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="space-y-2">
+                                <h4 class="text-xl font-bold text-white">Use Cases</h4>
+                                <p class="text-zinc-400">Built specifically for planning loans, tracking savings, or estimating investment returns with professional clarity.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vibecoding Badge -->
+                    <div class="mt-16 pt-12 border-t border-white/5 flex justify-center">
+                        <div class="flex items-center gap-3 px-6 py-3 rounded-full bg-[#00ff55]/10 border border-[#00ff55]/20">
+                            <span class="text-[#00ff55] font-bold text-xs uppercase tracking-[0.2em]">Built with Vibecoding</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Developer Summary -->
+            <section class="text-center py-24 reveal-content">
+                <h2 class="text-sm uppercase tracking-widest text-[#00ff55] font-bold mb-6">Developer Context</h2>
+                <h3 class="text-4xl md:text-5xl font-bold mb-12 uppercase tracking-tighter">iOS Engineering</h3>
+                <p class="text-zinc-400 max-w-3xl mx-auto mb-16 text-lg leading-relaxed">
+                    As a technical lead, I built this application using a <span class="text-white font-bold">MacBook Air M4</span>. By utilizing <span class="text-white">Vibe Coding</span> techniques, I was able to translate complex financial logic into a polished iOS application, leveraging expertise in <span class="text-[#00ff55]">Xcode</span> and AI-assisted development.
+                </p>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                    <a href="https://apps.apple.com/us/app/intriq-calculator/id6758918917" target="_blank" class="px-8 py-4 bg-[#00ff55] text-black rounded-2xl flex items-center gap-3 hoverable group hover:bg-[#00ff55]/90 hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,255,85,0.3)]">
+                        <i data-lucide="smartphone" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm uppercase tracking-widest font-bold">Available on App Store</span>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <p>&copy; 2024 Intriq &bull; Part of the Vamsi Reddy Portfolio</p>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        // Hover Effect
+        const hoverables = document.querySelectorAll('.hoverable, .glass-card, a, button');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('w-[60px]', 'h-[60px]', 'bg-white/10'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('w-[60px]', 'h-[60px]', 'bg-white/10'));
+        });
+
+        // Animations
+        gsap.to('.reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            scrollTrigger: {
+                trigger: '.reveal-content',
+                start: "top 85%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        // Specific Hero Stagger
+        const heroTl = gsap.timeline();
+        heroTl.to('header .reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Section Wise Mouse Entry Animation
+        const sections = document.querySelectorAll('section, header');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                gsap.to(section, {
+                    scale: 1.01,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: -10,
+                        borderColor: 'rgba(0, 255, 85, 0.3)',
+                        stagger: 0.05,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '#00ff55',
+                        x: 10,
+                        duration: 0.4
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                gsap.to(section, {
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: 0,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        duration: 0.6,
+                        ease: "power2.inOut"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '',
+                        x: 0,
+                        duration: 0.4
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

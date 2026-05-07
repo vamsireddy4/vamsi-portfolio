@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MagicTeams.ai | Project Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,300,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #fafafa;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        .cursor-dot, .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: white; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal-content { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#00ff55] selection:text-black">
+    
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-8 flex justify-between items-center mix-blend-difference">
+        <a href="portfolio.html#flagship" class="flex items-center gap-4 group hoverable">
+            <div class="w-12 h-12 glass-card rounded-2xl flex items-center justify-center hover:bg-[#00ff55] hover:text-black transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">Back to Portfolio</span>
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="relative min-h-[70vh] flex items-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-grid opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
+        
+        <!-- Glow Effect -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00ff55]/5 blur-[120px] rounded-full"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="reveal-content text-[#00ff55] uppercase tracking-[0.3em] text-sm font-bold mb-6">Current Venture</p>
+                <h1 class="reveal-content text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-none mb-8 uppercase whitespace-nowrap">
+                    MAGICTEAMS <span class="text-white outline-text">AI</span>
+                </h1>
+                <p class="reveal-content text-zinc-400 text-lg md:text-2xl max-w-4xl mx-auto leading-relaxed">
+                    I architected and developed MagicTeams, a high-performance, multi-channel AI operations platform designed to consolidate complex communication workflows into a single "command center". Unlike standard chatbots, this platform serves as an orchestration layer for real-world infrastructure across voice, SMS, WhatsApp, and email.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="container mx-auto px-6 py-24">
+        <div class="max-w-5xl mx-auto">
+            
+            <!-- Overview -->
+            <section class="mb-32 reveal-content">
+                <div class="grid md:grid-cols-12 gap-12 items-start">
+                    <div class="md:col-span-4">
+                        <h2 class="text-sm uppercase tracking-widest text-zinc-500 font-bold mb-4 flex items-center gap-2">
+                            <span class="w-8 h-px bg-[#00ff55]/50"></span> The Mission
+                        </h2>
+                    </div>
+                    <div class="md:col-span-8">
+                        <p class="text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                            I built the application as a <span class="text-white">"five-in-one" shell</span>, featuring dedicated workspaces for different business needs—serving as an orchestration layer for real-world infrastructure.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Ecosystem (Bento Grid Style) -->
+            <section class="mb-32">
+                <div class="flex items-center gap-4 mb-16 reveal-content">
+                    <h2 class="text-3xl font-bold tracking-tight">Product Ecosystem</h2>
+                    <div class="h-px flex-grow bg-white/10"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- MagicTeams Voice -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <img src="https://framerusercontent.com/images/dgVs9dqZ1mx4MzF91o2Q2CkGog.png" class="w-8 h-8 object-contain" alt="MagicTeams Voice">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">MAGICTEAMS VOICE</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            A low-latency telephony system for inbound/outbound AI calling, integrated with <span class="text-white">Twilio</span> and <span class="text-white">Telnyx</span>.
+                        </p>
+                    </div>
+
+                    <!-- MagicTeams SMS & Gmail -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <img src="https://cdn.simpleicons.org/gmail/EA4335" class="w-6 h-6" alt="Gmail">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">MAGICTEAMS SMS & GMAIL</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            Automated outreach modules for high-volume, template-driven campaigns with full delivery and history tracking.
+                        </p>
+                    </div>
+
+                    <!-- MagicTeams WhatsApp -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <img src="https://cdn.simpleicons.org/whatsapp/25D366" class="w-6 h-6" alt="WhatsApp">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">MAGICTEAMS WHATSAPP</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            A specialized workspace supporting <span class="text-white">Meta template parsing</span>, audience segmentation, and webhook-based AI auto-replies.
+                        </p>
+                    </div>
+
+                    <!-- MagicTeams Training -->
+                    <div class="glass-card p-8 rounded-3xl reveal-content hover:border-[#00ff55]/30 transition-colors">
+                        <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-6">
+                            <i data-lucide="brain" class="w-6 h-6 text-[#00ff55]"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">MAGICTEAMS TRAINING</h3>
+                        <p class="text-zinc-400 leading-relaxed">
+                            A sales-enablement product (Firebrand) for AI roleplay scenarios with automated scoring based on <span class="text-white">BANT</span> and <span class="text-white">SPIN</span> frameworks.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Core -->
+            <section class="mb-32">
+                <div class="glass-card p-12 rounded-[3rem] border-[#00ff55]/20 relative overflow-hidden reveal-content">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#00ff55]/5 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    
+                    <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
+                        <i data-lucide="code-2" class="text-[#00ff55]"></i>
+                        Technical Core & Capabilities
+                    </h2>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+                        <div class="glass-card p-6 rounded-2xl border-white/5 hover:border-[#00ff55]/30 transition-colors text-center">
+                            <img src="https://cdn.simpleicons.org/supabase/3ECF8E" class="w-10 h-10 mx-auto mb-4" alt="Supabase">
+                            <h4 class="font-bold text-xs uppercase tracking-widest">Supabase</h4>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl border-white/5 hover:border-[#00ff55]/30 transition-colors text-center">
+                            <img src="https://cdn.simpleicons.org/vite/646CFF" class="w-10 h-10 mx-auto mb-4" alt="Vite">
+                            <h4 class="font-bold text-xs uppercase tracking-widest">Vite</h4>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl border-white/5 hover:border-[#00ff55]/30 transition-colors text-center">
+                            <img src="https://cdn.simpleicons.org/supabase/3ECF8E" class="w-10 h-10 mx-auto mb-4" alt="Edge Functions">
+                            <h4 class="font-bold text-xs uppercase tracking-widest">Edge Functions</h4>
+                        </div>
+                        <div class="glass-card p-6 rounded-2xl border-white/5 hover:border-[#00ff55]/30 transition-colors text-center">
+                            <img src="https://cdn.simpleicons.org/typescript/3178C6" class="w-10 h-10 mx-auto mb-4" alt="TypeScript">
+                            <h4 class="font-bold text-xs uppercase tracking-widest">TypeScript</h4>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-12 text-left">
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="text-white font-bold mb-2 uppercase tracking-widest text-xs">AI Orchestration</h4>
+                                <p class="text-zinc-400">Developed a modular AI Operating System (AIOS) framework with distinct layers for Context, Data, and Intelligence.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-2 uppercase tracking-widest text-xs">Infrastructure</h4>
+                                <p class="text-zinc-400">The platform handles real-time data syncing with Google Calendar, GoHighLevel, and Cal.com for automated bookings.</p>
+                            </div>
+                        </div>
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="text-white font-bold mb-2 uppercase tracking-widest text-xs">Architecture</h4>
+                                <p class="text-zinc-400">Built using React, Vite, and Supabase, utilizing Edge Functions to manage telecom, CRM, and analysis tasks.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-2 uppercase tracking-widest text-xs">Scalability</h4>
+                                <p class="text-zinc-400">Designed a "multi-space" environment where users toggle betweenoperational products without a page reload.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vibecoding Badge -->
+                    <div class="mt-16 pt-12 border-t border-white/5 flex justify-center">
+                        <div class="flex items-center gap-3 px-6 py-3 rounded-full bg-[#00ff55]/10 border border-[#00ff55]/20">
+                            <span class="text-[#00ff55] font-bold text-xs uppercase tracking-[0.2em]">Built with Vibecoding</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Target Audience -->
+            <section class="text-center py-24 reveal-content">
+                <h2 class="text-sm uppercase tracking-widest text-[#00ff55] font-bold mb-6">Key Impact</h2>
+                <h3 class="text-4xl md:text-5xl font-bold mb-12">Business Value</h3>
+                <p class="text-zinc-400 max-w-3xl mx-auto mb-16 text-lg">
+                    MagicTeams is designed for lead generation teams and agencies that need to automate high-volume customer communication while maintaining a professional, data-driven sales training environment.
+                </p>
+                
+                <a href="https://magicteams.ai/" target="_blank" class="inline-flex items-center gap-3 bg-[#00ff55] text-black px-10 py-5 rounded-2xl font-bold uppercase tracking-widest hover:scale-105 transition-transform group">
+                    Visit magicteams.ai
+                    <i data-lucide="external-link" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </a>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-20 border-t border-white/5 text-center text-zinc-500 text-sm">
+        <p>&copy; 2024 MagicTeams.ai &bull; Part of the Vamsi Reddy Portfolio</p>
+    </footer>
+
+    <script>
+        // Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0 });
+            gsap.to(cursorOutline, { x: e.clientX, y: e.clientY, duration: 0.15 });
+        });
+
+        // Hover Effect
+        const hoverables = document.querySelectorAll('.hoverable, .glass-card, a, button');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorOutline.classList.add('w-[60px]', 'h-[60px]', 'bg-white/10'));
+            el.addEventListener('mouseleave', () => cursorOutline.classList.remove('w-[60px]', 'h-[60px]', 'bg-white/10'));
+        });
+
+        // Animations
+        gsap.to('.reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            scrollTrigger: {
+                trigger: '.reveal-content',
+                start: "top 85%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        // Specific Hero Stagger
+        const heroTl = gsap.timeline();
+        heroTl.to('header .reveal-content', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.2,
+            ease: "power4.out"
+        });
+
+        // Section Wise Mouse Entry Animation
+        const sections = document.querySelectorAll('section, header');
+        sections.forEach(section => {
+            section.addEventListener('mouseenter', () => {
+                gsap.to(section, {
+                    scale: 1.01,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+                // Find any inner cards and pop them
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: -10,
+                        borderColor: 'rgba(0, 255, 85, 0.3)',
+                        stagger: 0.05,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+                }
+                // Glow title
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '#00ff55',
+                        x: 10,
+                        duration: 0.4
+                    });
+                }
+            });
+
+            section.addEventListener('mouseleave', () => {
+                gsap.to(section, {
+                    scale: 1,
+                    duration: 0.8,
+                    ease: "power2.inOut"
+                });
+                const cards = section.querySelectorAll('.glass-card');
+                if(cards.length > 0) {
+                    gsap.to(cards, {
+                        y: 0,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        duration: 0.6,
+                        ease: "power2.inOut"
+                    });
+                }
+                const title = section.querySelector('h2, h3');
+                if(title) {
+                    gsap.to(title, {
+                        color: '',
+                        x: 0,
+                        duration: 0.4
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
