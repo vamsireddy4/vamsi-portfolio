@@ -973,100 +973,127 @@
     <!-- Client-side section router: hash-free, path-based URLs -->
     <script>
         (function () {
-            // Map of URL path segments → section element IDs
             const ROUTES = {
-                '':           'hero',
-                'portfolio':  'hero',
-                'about':      'about',
+                '': 'hero',
+                'portfolio': 'hero',
+                'about': 'about',
                 'experience': 'expertise',
-                'projects':   'projects',
-                'flagship':   'flagship',
+                'projects': 'projects',
+                'flagship': 'flagship'
             };
 
-            function segmentFromPath(pathname) {
-                // e.g. /portfolio/about → 'about'
-                const parts = pathname.replace(/^\//, '').split('/');
-                // Drop the leading "portfolio" if present
-                if (parts[0] === 'portfolio') parts.shift();
-                return parts[0] || '';
+            function segmentFromPath(path) {
+                const clean = path.replace(/\/$/, '');
+                const parts = clean.split('/');
+                const last = parts[parts.length - 1];
+                return (last === 'portfolio') ? '' : last;
             }
 
-            function scrollToSection(sectionId) {
-                const el = document.getElementById(sectionId);
-                if (el) {
-                    el.scrollIntoView({ behavior: 'smooth' });
+            function scrollToSection(id, updateUrl = true) {
+                const section = document.getElementById(id);
+                if (section) {
+                    window.scrollTo({
+                        top: section.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    if (updateUrl) {
+                        const seg = Object.keys(ROUTES).find(key => ROUTES[key] === id);
+                        if (seg !== undefined) {
+                            const newPath = seg === '' || seg === 'portfolio' ? '/portfolio' : '/portfolio/' + seg;
+                            if (location.pathname !== newPath) {
+                                history.pushState({ sectionId: id }, "", newPath);
+                            }
+                        }
+                    }
                 }
             }
 
-            function navigateTo(href, sectionId) {
-                history.pushState({ sectionId }, '', href);
-                scrollToSection(sectionId);
-            }
-
-            // Intercept all nav links that carry data-section
-            document.querySelectorAll('a[data-section]').forEach(function (link) {
+            // Handle path-based navigation for all links with data-section
+            document.querySelectorAll('a[data-section]').forEach(link => {
                 link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const sectionId = link.getAttribute('data-section');
-                    const href = link.getAttribute('href');
-                    navigateTo(href, sectionId);
+                    const sectionId = this.getAttribute('data-section');
+                    if (sectionId) {
+                        e.preventDefault();
+                        scrollToSection(sectionId);
+                        // Close mobile menu if open
+                        const menu = document.getElementById('mobile-menu');
+                        if (menu && !menu.classList.contains('translate-x-full')) {
+                            const closeBtn = document.getElementById('menu-close');
+                            if (closeBtn) closeBtn.click();
+                        }
+                    }
                 });
             });
 
             // Handle browser back/forward
             window.addEventListener('popstate', function (e) {
                 if (e.state && e.state.sectionId) {
-                    scrollToSection(e.state.sectionId);
+                    scrollToSection(e.state.sectionId, false);
+                } else {
+                    const seg = segmentFromPath(location.pathname);
+                    const sectionId = ROUTES[seg];
+                    if (sectionId) {
+                        scrollToSection(sectionId, false);
+                    }
                 }
             });
 
-            // Handle scroll → update URL (debounced)
-            const sectionIds = Object.values(ROUTES);
-            const urlForSection = {};
-            Object.entries(ROUTES).forEach(function ([seg, id]) {
-                // prefer the longer path (e.g. /portfolio/about over '')
-                const path = seg === '' || seg === 'portfolio'
-                    ? '/portfolio'
-                    : '/portfolio/' + seg;
-                if (!urlForSection[id] || path.length > urlForSection[id].length) {
-                    urlForSection[id] = path;
+            // Purge legacy hashes and handle deep links
+            function handleInitialNavigation() {
+                if (window.location.hash) {
+                    const hashId = window.location.hash.substring(1);
+                    const seg = Object.keys(ROUTES).find(key => ROUTES[key] === hashId);
+                    if (seg !== undefined) {
+                        const newPath = seg === '' || seg === 'portfolio' ? '/portfolio' : '/portfolio/' + seg;
+                        history.replaceState({ sectionId: hashId }, "", newPath);
+                        setTimeout(() => scrollToSection(hashId, false), 500);
+                        return;
+                    } else {
+                        history.replaceState(null, "", window.location.pathname);
+                    }
                 }
-            });
 
+                const seg = segmentFromPath(location.pathname);
+                const sectionId = ROUTES[seg];
+                if (sectionId && sectionId !== 'hero') {
+                    setTimeout(() => scrollToSection(sectionId, false), 600);
+                }
+            }
+
+            if (document.readyState === 'complete') {
+                handleInitialNavigation();
+            } else {
+                window.addEventListener('load', handleInitialNavigation);
+            }
+
+            // Update URL based on scroll position
+            const sections = document.querySelectorAll('section[id], header[id]');
             let ticking = false;
             window.addEventListener('scroll', function () {
                 if (ticking) return;
                 ticking = true;
                 requestAnimationFrame(function () {
-                    let current = 'hero';
-                    sectionIds.forEach(function (id) {
-                        const el = document.getElementById(id);
-                        if (el) {
-                            const rect = el.getBoundingClientRect();
-                            if (rect.top <= window.innerHeight * 0.45) {
-                                current = id;
-                            }
+                    let current = "";
+                    sections.forEach((section) => {
+                        const rect = section.getBoundingClientRect();
+                        if (rect.top <= 150) {
+                            current = section.getAttribute("id");
                         }
                     });
-                    const newPath = urlForSection[current] || '/portfolio';
-                    if (location.pathname !== newPath) {
-                        history.replaceState({ sectionId: current }, '', newPath);
+
+                    if (current) {
+                        const seg = Object.keys(ROUTES).find(key => ROUTES[key] === current);
+                        if (seg !== undefined) {
+                            const newPath = (seg === '' || seg === 'portfolio') ? '/portfolio' : '/portfolio/' + seg;
+                            if (location.pathname !== newPath) {
+                                history.replaceState({ sectionId: current }, "", newPath);
+                            }
+                        }
                     }
                     ticking = false;
                 });
             });
-
-            // On first load, scroll to section implied by the URL
-            (function () {
-                const seg = segmentFromPath(location.pathname);
-                const sectionId = ROUTES[seg];
-                if (sectionId && sectionId !== 'hero') {
-                    // Wait for page to settle then scroll
-                    window.addEventListener('load', function () {
-                        setTimeout(function () { scrollToSection(sectionId); }, 600);
-                    });
-                }
-            })();
         })();
     </script>
 </body>
