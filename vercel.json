@@ -4,6 +4,7 @@
     { "source": "/portfolio",            "destination": "/index.html" },
     { "source": "/portfolio/about",      "destination": "/index.html" },
     { "source": "/portfolio/experience", "destination": "/index.html" },
-    { "source": "/portfolio/projects",   "destination": "/index.html" }
+    { "source": "/portfolio/projects",   "destination": "/index.html" },
+    { "source": "/portfolio/flagship",   "destination": "/index.html" }
   ]
 }

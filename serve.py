@@ -17,7 +17,7 @@ PORT = 8000
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 # ONLY these sub-paths are SPA section routes → serve index.html
-SPA_SECTIONS = {'about', 'experience', 'projects'}
+SPA_SECTIONS = {'about', 'experience', 'projects', 'flagship'}
 
 
 class PrettyURLHandler(http.server.SimpleHTTPRequestHandler):
