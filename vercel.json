@@ -4,20 +4,6 @@
     { "source": "/portfolio",            "destination": "/index.html" },
     { "source": "/portfolio/about",      "destination": "/index.html" },
     { "source": "/portfolio/experience", "destination": "/index.html" },
-    { "source": "/portfolio/projects",   "destination": "/index.html" },
-    { "source": "/portfolio/aios",       "destination": "/aios.html" },
-    { "source": "/portfolio/ltes",       "destination": "/ltes.html" },
-    { "source": "/portfolio/fxbc",       "destination": "/fxbc.html" },
-    { "source": "/portfolio/belotrap",   "destination": "/belotrap.html" },
-    { "source": "/portfolio/everyai",    "destination": "/everyai.html" },
-    { "source": "/portfolio/intriq",     "destination": "/intriq.html" },
-    { "source": "/portfolio/magicteams", "destination": "/magicteams.html" },
-    { "source": "/aios",                 "destination": "/aios.html" },
-    { "source": "/ltes",                 "destination": "/ltes.html" },
-    { "source": "/fxbc",                 "destination": "/fxbc.html" },
-    { "source": "/belotrap",             "destination": "/belotrap.html" },
-    { "source": "/everyai",              "destination": "/everyai.html" },
-    { "source": "/intriq",               "destination": "/intriq.html" },
-    { "source": "/magicteams",           "destination": "/magicteams.html" }
+    { "source": "/portfolio/projects",   "destination": "/index.html" }
   ]
 }
